@@ -5,9 +5,7 @@
  */
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -21,32 +19,19 @@ public class Cookie {
     private double rating;
     private String review = "", description = "";
     public static final String CRUMBL_PAGE = "https://crumblcookies.com";
-    public Cookie(int day, int month, int year, int num)
+
+    public Cookie(int num)
     {
-        // TO-DO:
-        // 1. Make a file with all the weeks of crumbl and then scrape it looking for what the
-        // cookies are with the given date
-        // 2. Set cookie information depending on cookie number (maybe go based on rating)
-        name = null;
-        rating = 0.0;
-        review = null;
-        description = null;
         String link2 = "";
-
         String inputLine;
-
         String line = "";
         try
         {
             URL crumbl = new URI(CRUMBL_PAGE).toURL();
             URLConnection cc = crumbl.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-
-                cc.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(cc.getInputStream()));
             while ((inputLine = in.readLine()) != null)
-
                 line += inputLine;
-
             in.close();
             int findSecondLink = 0;
             String finder =
@@ -55,15 +40,15 @@ public class Cookie {
             for (int i = 0; i < num; i++)
             {
                 findSecondLink =
-                    line.indexOf("rounded-full py-3 transition-all duration-300 ease-in " +
-                                 "group-hover:lg:pl-[30px] "
+                    line.indexOf("rounded-full py-3 transition-all duration-300 ease-in "
+                                 + "group-hover:lg:pl-[30px] "
                                  + "pl-[0px] pr-[30px] group-hover:lg:border border-transparent");
                 if (i > 0)
                 {
                     line = line.substring(findSecondLink + finder.length());
                     findSecondLink = line.indexOf(
-                        "rounded-full py-3 transition-all duration-300 ease-in " +
-                        "group-hover:lg:pl-[30px] "
+                        "rounded-full py-3 transition-all duration-300 ease-in "
+                        + "group-hover:lg:pl-[30px] "
                         + "pl-[0px] pr-[30px] group-hover:lg:border border-transparent");
                 }
                 line = line.substring(findSecondLink);
@@ -72,6 +57,7 @@ public class Cookie {
             link2 = line.substring(findSecondLink1);
             int findSecondLink2 = link2.indexOf("\"");
             link2 = link2.substring(0, findSecondLink2);
+
         } catch (FileNotFoundException ex)
 
         {
@@ -134,12 +120,14 @@ public class Cookie {
                 name = name.substring(0, ampChecker) + " and" +
                        name.substring(ampChecker + 4, name.length());
             }
+
             int rating1 = line2.indexOf("text-nowrap\">");
             String textLocater = "text-nowrap\">";
             String ratingS = line2.substring(rating1 + textLocater.length());
             int rating2 = ratingS.indexOf(" ");
             ratingS = ratingS.substring(0, rating2);
             rating = (double) (Double.parseDouble(ratingS));
+
             String descriptionLocater = "2xl:leading-[22px] md:max-w-[700px] text-xl leading-6\">";
             int description1 =
                 line2.indexOf("2xl:leading-[22px] md:max-w-[700px] text-xl leading-6\">");
@@ -150,11 +138,12 @@ public class Cookie {
             {
                 description = "N/A";
             }
-            String topRLocater="ext-ellipsis line-clamp-5\">";
-            int topR1=line2.indexOf(topRLocater);
-            String topR=line2.substring(topR1+topRLocater.length());
-            int topR2=topR.indexOf("<");
-            review=topR.substring(0,topR2);
+
+            String topRLocater = "ext-ellipsis line-clamp-5\">";
+            int topR1 = line2.indexOf(topRLocater);
+            String topR = line2.substring(topR1 + topRLocater.length());
+            int topR2 = topR.indexOf("<");
+            review = topR.substring(0, topR2);
 
         } catch (FileNotFoundException ex)
 
