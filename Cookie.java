@@ -113,7 +113,7 @@ public class Cookie {
             in2.close();
             int cookieName1 = line2.indexOf("alt=") + 5;
             int cookieName2 = line2.indexOf("loading=") - 2;
-            name = line2.substring(cookieName1, cookieName2);
+            name = apostropheDecoder(line2.substring(cookieName1, cookieName2));
             int ampChecker = name.indexOf("&amp");
             if (ampChecker != -1)
             {
@@ -133,7 +133,7 @@ public class Cookie {
                 line2.indexOf("2xl:leading-[22px] md:max-w-[700px] text-xl leading-6\">");
             String descript = line2.substring(description1 + descriptionLocater.length());
             int description2 = descript.indexOf(".");
-            description = descript.substring(0, description2 + 1);
+            description = apostropheDecoder(descript.substring(0, description2 + 1));
             if (description.length() > 200)
             {
                 description = "N/A";
@@ -143,7 +143,7 @@ public class Cookie {
             int topR1 = line2.indexOf(topRLocater);
             String topR = line2.substring(topR1 + topRLocater.length());
             int topR2 = topR.indexOf("<");
-            review = topR.substring(0, topR2);
+            review = apostropheDecoder(topR.substring(0, topR2));
 
         } catch (FileNotFoundException ex)
 
@@ -179,6 +179,24 @@ public class Cookie {
 
             return;
         }
+    }
+
+    public static String apostropheDecoder(String in)
+    {
+        /*
+         * This method is complete
+         * Webscraping apostrophe returns symbols
+         * This method decodes the symbols
+         */
+        if (in.indexOf("&#x27;") != -1)
+        {
+            int index = in.indexOf("&#x27;");
+            String out = in.substring(0, index);
+            out += "'";
+            out += in.substring(index + 6);
+            return out;
+        }
+        return in;
     }
 
     public String getName()
